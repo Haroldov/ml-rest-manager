@@ -5,8 +5,6 @@ services:
     image: mysql:5.7
     env_file:
       - .env
-    ports:
-      - "3306:3306"
 
   api:
     build: api
