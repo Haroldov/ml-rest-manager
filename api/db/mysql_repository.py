@@ -112,3 +112,25 @@ class MySQLRepository():
             "num_features": data[4],
             "num_training": data[5],
         }
+
+    def retrieve_models_by_trained_score(self):
+        cnx, cursor = self._connect()
+
+        with open(self.queries_path + "trained_score.sql", "r") as f:
+            retrieve_metadata_query = f.read()
+
+        cursor.execute(
+            retrieve_metadata_query,
+        )
+
+        data = cursor.fetchall()
+
+        cursor.close()
+        cnx.close()
+
+        return [{
+            "model_id": item[0],
+            "model_type": item[1],
+            "num_training": item[2],
+            "trained_score": item[3],
+        } for item in data]

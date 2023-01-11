@@ -1,4 +1,6 @@
-from flask import Flask , request
+import base64
+
+from flask import Flask, request
 from models.model_creation_entity import model_creation_request
 from models.model_training_entity import model_training_request
 from dotenv import load_dotenv
@@ -76,3 +78,35 @@ def model_training(model_uid):
     )
 
     return {"id": model_uid, "n_trained": new_trained}
+
+@application.route("/models/<model_uid>/predict", methods=["GET"])
+def model_predict(model_uid):
+    feature_vector = base64.b64decode(
+        request.args.get("x")
+    )
+    feature_vector = eval(feature_vector)
+
+    print(feature_vector)
+    if feature_vector is None:
+        print("Feature vector empty")
+        return {"status": "bad_request"}, 400
+
+    model_metadata = mgr.retrieve_model_by_id(model_uid)
+
+    if model_metadata is None:
+        print("Model not foud in DB")
+        return {"status": "model_not_found"}, 404
+
+    if model_metadata["d"] != len(feature_vector):
+        print("Feature vector does not match length")
+        return {"status": "bad_request"}, 400
+
+    prediction = mgr.predict(
+        model_uid, feature_vector,
+    )
+
+    return {"x": feature_vector, "y": int(prediction)}
+
+@application.route("/models/", methods=["GET"])
+def most_trained_models():
+    return mgr.get_models_and_trained_score()

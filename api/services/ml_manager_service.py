@@ -84,3 +84,37 @@ class MLManagerService():
         )
 
         return self.retrieve_model_by_id(model_uid)["n_trained"]
+
+    def predict(
+            self, model_uid, feature_sample
+    ):
+        data = self.db.retrieve_model(model_uid)
+
+        if data is None:
+            return None
+
+        clf = pickle.loads(data["model_binary"])
+
+        np_feature_vector = np.asarray(feature_sample).reshape(
+            (-1, data["num_features"])
+        )
+
+        label = clf.predict(
+            X=np_feature_vector,
+        )[0]
+
+        return label
+
+    def get_models_and_trained_score(self):
+        data = self.db.retrieve_models_by_trained_score()
+
+        return {
+           "models": [
+               {
+                   "id": item["model_id"],
+                   "model": item["model_type"],
+                   "n_trained": item["num_training"],
+                   "training_score": item["trained_score"]
+               } for item in data
+           ]
+       }
