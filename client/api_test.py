@@ -7,20 +7,6 @@ import numpy
 class ApiTestCase(unittest.TestCase):
     HOST = 'http://api:8888'
 
-    def test_3_wrong_read(self):
-        """ test erroneous read operation """
-        with self.assertRaises(Exception) as error:
-            self._request('GET', '/models/123456789/')
-
-        assert error.exception.response.status_code == 404
-
-    @classmethod
-    def _request(self, method, path, json=None):
-        url = f'{self.HOST}{path}'
-        resp = requests.request(method, url, json=json, timeout=1)
-        resp.raise_for_status()
-        return resp.json()
-
     def test_0_health(self):
         """ anity check to ensure that the API is reachable """
         resp = self._request('GET', '/health/')
@@ -54,9 +40,13 @@ class ApiTestCase(unittest.TestCase):
                 'd': 4,
                 'n_classes': 2,
             })
-
         assert error.exception.response.status_code == 400
 
+    def test_3_wrong_read(self):
+        """ test erroneous read operation """
+        with self.assertRaises(Exception) as error:
+            self._request('GET', '/models/123456789/')
+        assert error.exception.response.status_code == 404
 
     def test_4_train_predict(self):
         """ test train/predict operation """
@@ -153,6 +143,11 @@ class ApiTestCase(unittest.TestCase):
         resp_model_id_to_score = {model['id']: model['training_score'] for model in resp['models']}
         for m_id, training_score in model_id_to_score.items():
             resp_score = resp_model_id_to_score[m_id]
-            print(training_score, resp_score)
             assert numpy.isclose(training_score, resp_score)
-            
+
+    @classmethod
+    def _request(self, method, path, json=None):
+        url = f'{self.HOST}{path}'
+        resp = requests.request(method, url, json=json, timeout=1)
+        resp.raise_for_status()
+        return resp.json()
