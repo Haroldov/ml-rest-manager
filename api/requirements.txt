@@ -1,1 +1,6 @@
 mysqlclient
+Flask==2.2.2
+scikit-learn
+scipy==1.9.3
+numpy
+mysql-connector-python

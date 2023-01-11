@@ -114,7 +114,7 @@ class MLManagerService():
                    "id": item["model_id"],
                    "model": item["model_type"],
                    "n_trained": item["num_training"],
-                   "training_score": item["trained_score"]
+                   "training_score": float(item["trained_score"])
                } for item in data
            ]
        }

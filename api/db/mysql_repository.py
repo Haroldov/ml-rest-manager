@@ -104,6 +104,10 @@ class MySQLRepository():
         cursor.close()
         cnx.close()
 
+        if data is None:
+            return None
+
+        
         return {
             "model_binary": data[0],
             "model_type": data[1],
