@@ -7,7 +7,7 @@ class MySQLRepository():
 
     def __init__(self):
         self.config = {
-            "user": os.getenv("MYSQL_USER", ""),
+            "user": os.getenv("MYSQL_USER", "root"),
             "password": os.getenv("MYSQL_ROOT_PASSWORD", "PASSWORD"),
             "host": os.getenv("MYSQL_HOST", "127.0.0.1"),
             "port": 3306,
