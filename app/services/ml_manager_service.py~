@@ -3,6 +3,8 @@ import pickle
 import uuid
 import json
 
+from fastapi import Depends
+
 from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import CategoricalNB
 from sklearn.linear_model import SGDClassifier
@@ -15,9 +17,9 @@ AVAILABLE_MODELS = {
     "SGDClassifier": SGDClassifier,
 }
 
-class MLManagerService():
+class MLManagerService:
 
-    def __init__(self, db):
+    def __init__(self, db = Depends(MySQLRepository)):
         self.db = db
 
     def create_model_with_reqs(self, r_entity):

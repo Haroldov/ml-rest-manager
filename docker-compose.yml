@@ -1,32 +1,29 @@
-version: '3.2'
+version: '3'
 
 services:
-  mysql:
-    image: mysql:5.7
-    env_file:
-      - .env
-
-  api:
-    build: api
-    depends_on:
-      - mysql
-    env_file:
-      - .env
+  db:
+    image: mysql:8.0.32
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassw0rd!
+      - MYSQL_DATABASE=test_db
     volumes:
-      - type: bind
-        source: ./api
-        target: /api
-        read_only: true
-    entrypoint: uwsgi --ini /api/uwsgi.ini
+      - db:/var/lib/mysql
 
-  client:
-    build: client
+  app:
+    build: .
+    ports:
+      - "8000:8000"
     depends_on:
-      - api
-    volumes:
-      - type: bind
-        source: ./client
-        target: /client
-        read_only: true
-    working_dir: /client
-    command: python3 -m unittest -v api_test.py
+      - db
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassw0rd!
+      - MYSQL_DATABASE=test_db
+      - MYSQL_USER=root
+      - MYSQL_HOST=database
+    links:
+      - "db:database"
+volumes:
+  db:
+    driver: local

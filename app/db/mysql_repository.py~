@@ -1,17 +1,22 @@
+from config import settings
+
+from functools import lru_cache
 import mysql.connector
+
 import os
 import pickle
 import uuid
 
-class MySQLRepository():
+@lru_cache()
+class MySQLRepository:
 
     def __init__(self):
         self.config = {
-            "user": os.getenv("MYSQL_USER", "root"),
-            "password": os.getenv("MYSQL_ROOT_PASSWORD", "PASSWORD"),
-            "host": os.getenv("MYSQL_HOST", "127.0.0.1"),
+            "user": settings.mysql_user,
+            "password": settings.mysql_root_password,
+            "host": settings.mysql_host,
             "port": 3306,
-            "database": os.getenv("MYSQL_DATABASE", "public"),
+            "database": settings.mysql_database,
             "raise_on_warnings": True,
         }
         self.pool_name = "MYSQL_DB_POOL"
@@ -24,6 +29,8 @@ class MySQLRepository():
                 pool_size=self.pool_size,
                 **self.config
             )
+
+            self.create_tables_on_startup()
         except Exception as e:
             print("Exception connecting to db:", e)
 
@@ -42,7 +49,7 @@ class MySQLRepository():
 
             return None
 
-    def create_tables_on_startup(self):
+    def __create_tables_on_startup(self):
         with open(self.queries_path + "create_tables.sql", "r") as f:
             queries = f.read()
 

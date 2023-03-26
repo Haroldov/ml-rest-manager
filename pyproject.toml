@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "Machine Learning API for manage models"
+authors = ["haroldo velez <hvelez020@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.24.2"
+fastapi = "^0.95.0"
+pandas = "^1.5.3"
+scikit-learn = "^1.2.2"
+mysql-connector-python = "^8.0.32"
+uvicorn = "^0.21.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
