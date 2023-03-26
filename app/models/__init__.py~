@@ -1,2 +1,0 @@
-from .model_creation_entity import ModelCreationEntity #noqa
-from .model_training_entity import ModelTrainingRequest #noqa
