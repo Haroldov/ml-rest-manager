@@ -32,3 +32,20 @@ Example body:
   "num_classes": 2
 }
 ```
+* `GET /models/<uid>`: Retrieves a specific model.
+* `POST /models/<uid>/train`: Trains partially a model that has been already created.
+Example body:
+
+```json
+{
+  "feature_vector": [
+    1.11,
+    2.22,
+    3.33,
+    -4.44
+  ],
+  "label": 1
+}
+```
+* `GET /models/<uid>/predict?input_vector=<base64-codified-vector>`: Predics the label for the input vector specified in query params.
+* `GET /models`: Get most trained scores per each type of model.
