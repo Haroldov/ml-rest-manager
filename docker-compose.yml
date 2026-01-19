@@ -1,29 +1,7 @@
 version: '3'
 
 services:
-  db:
-    image: mysql:8.0.32
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpassw0rd!
-      - MYSQL_DATABASE=test_db
-    volumes:
-      - db:/var/lib/mysql
-
   app:
     build: .
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpassw0rd!
-      - MYSQL_DATABASE=test_db
-      - MYSQL_USER=root
-      - MYSQL_HOST=database
-    links:
-      - "db:database"
-volumes:
-  db:
-    driver: local

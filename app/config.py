@@ -1,12 +1,12 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     app_name: str = "ML API"
-    mysql_user: str
-    mysql_root_password: str
-    mysql_host: str
-    mysql_database: str
+    models_base_path: str = "./models/"
+
+    distilbert_model_name: str = "distilbert_mcqa"
+    distilbert_model_version: str = "v0.0.1"
 
 
 settings = Settings()
